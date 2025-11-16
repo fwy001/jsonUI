@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kendo UI JSON 통합 시스템</title>
+
+    <!-- Kendo UI CSS -->
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2023.3.1114/styles/kendo.default-main.min.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Kendo UI JSON 통합 시스템 데모</h1>
+
+        <p>
+            이 시스템은 JSON 설정을 기반으로 Kendo UI 컴포넌트(Grid, Chart, Form)를 동적으로 생성합니다.
+            서블릿과 JSON 통신을 통해 데이터를 관리하고, 폼 양식도 JSON으로 정의할 수 있습니다.
+        </p>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'grid-tab')">Grid 데모</button>
+            <button class="tab-button" onclick="openTab(event, 'chart-tab')">Chart 데모</button>
+            <button class="tab-button" onclick="openTab(event, 'form-tab')">Form 데모</button>
+            <button class="tab-button" onclick="openTab(event, 'dashboard-tab')">대시보드</button>
+        </div>
+
+        <div id="grid-tab" class="tab-content active">
+            <div class="section">
+                <p>JSON 설정을 통해 Grid를 생성하고, CRUD 작업을 수행할 수 있습니다. 편집 폼도 JSON으로 정의됩니다.</p>
+                <div id="employeeGrid" class="grid-container"></div>
+            </div>
+        </div>
+
+        <div id="chart-tab" class="tab-content">
+            <div class="section">
+                <p>JSON 설정을 통해 다양한 유형의 차트를 생성할 수 있습니다.</p>
+
+                <div class="dashboard" style="grid-template-columns: 1fr;">
+                    <div class="dashboard-item">
+                        <div id="salesChart" class="chart-container"></div>
+                    </div>
+
+                    <div class="dashboard-item">
+                        <div id="deptChart" class="chart-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="form-tab" class="tab-content">
+            <div class="section">
+                <p>JSON 설정을 통해 동적 폼을 생성하고, 유효성 검사를 수행할 수 있습니다.</p>
+                <div id="userForm" class="form-container"></div>
+            </div>
+        </div>
+
+        <div id="dashboard-tab" class="tab-content">
+            <div class="section">
+                <h2>통합 대시보드</h2>
+                <p>Grid, Chart, Form을 한 페이지에 통합한 예시입니다.</p>
+
+                <div class="dashboard">
+                    <div class="dashboard-item">
+                        <h3>월별 매출</h3>
+                        <div id="dashboardSalesChart"></div>
+                    </div>
+
+                    <div class="dashboard-item">
+                        <h3>부서별 인원</h3>
+                        <div id="dashboardDeptChart"></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-item" style="margin-top: 30px;">
+                    <div id="dashboardGrid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <!-- Kendo UI JS -->
+    <script src="https://kendo.cdn.telerik.com/2023.3.1114/js/kendo.all.min.js"></script>
+
+    <!-- Kendo UI 한국어 -->
+    <script src="https://kendo.cdn.telerik.com/2023.3.1114/js/messages/kendo.messages.ko-KR.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="js/kendo-json-ui.js"></script>
+
+    <script>
+        // Kendo UI 한국어 설정
+        kendo.culture("ko-KR");
+
+        $(document).ready(function() {
+            // Grid 탭
+            KendoJsonUI.createGrid('employeeGrid', 'api/grid/config/employeeGrid');
+
+            // Chart 탭
+            KendoJsonUI.createChart('salesChart', 'api/chart/config/monthlySales');
+            KendoJsonUI.createChart('deptChart', 'api/chart/config/departmentPie');
+
+            // Form 탭
+            KendoJsonUI.createForm('userForm', 'api/form/config/userRegistration');
+
+            // Dashboard 탭
+            KendoJsonUI.createChart('dashboardSalesChart', 'api/chart/config/monthlySales');
+            KendoJsonUI.createChart('dashboardDeptChart', 'api/chart/config/departmentPie');
+            KendoJsonUI.createGrid('dashboardGrid', 'api/grid/config/employeeGrid');
+        });
+
+        function openTab(evt, tabName) {
+            var i, tabContent, tabButtons;
+
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].classList.remove("active");
+            }
+
+            tabButtons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
