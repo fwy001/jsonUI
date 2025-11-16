@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kendo UI Grid - JSON 설정 예제 (Standalone)</title>
+
+    <!-- Kendo UI CSS -->
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2023.3.1114/styles/kendo.default-main.min.css" />
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #ff6358;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #555;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .code-box {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .k-grid {
+            margin-top: 20px;
+        }
+
+        .k-grid-header {
+            background-color: #ff6358;
+        }
+
+        .k-grid-header .k-header {
+            background-color: #ff6358;
+            color: white;
+            font-weight: 600;
+            border-color: #e55347;
+        }
+
+        .k-grid tbody tr:hover {
+            background-color: #fff5f4;
+        }
+
+        .button-container {
+            margin: 20px 0;
+        }
+
+        .k-button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Kendo UI Grid - JSON 설정 예제</h1>
+
+        <div class="info-box">
+            <strong>📌 이 예제는 서버 없이 로컬에서 바로 실행 가능합니다!</strong><br>
+            JSON 설정만으로 Kendo Grid를 생성하고, CRUD 작업을 수행할 수 있습니다.
+        </div>
+
+        <h2>1. JSON 설정</h2>
+        <div class="code-box">
+            <pre id="jsonConfig"></pre>
+        </div>
+
+        <h2>2. Grid 렌더링 결과</h2>
+        <div class="button-container">
+            <button class="k-button k-button-solid-primary" onclick="showConfig()">JSON 설정 보기</button>
+            <button class="k-button k-button-solid-base" onclick="showData()">현재 데이터 보기</button>
+        </div>
+        <div id="employeeGrid"></div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <!-- Kendo UI JS -->
+    <script src="https://kendo.cdn.telerik.com/2023.3.1114/js/kendo.all.min.js"></script>
+
+    <!-- Kendo UI 한국어 -->
+    <script src="https://kendo.cdn.telerik.com/2023.3.1114/js/messages/kendo.messages.ko-KR.min.js"></script>
+
+    <script>
+        // Kendo UI 한국어 설정
+        kendo.culture("ko-KR");
+
+        // JSON 설정 데이터
+        const gridConfig = {
+            "id": "employeeGrid",
+            "title": "직원 관리",
+            "columns": [
+                {
+                    "field": "id",
+                    "title": "ID",
+                    "width": 80,
+                    "editable": false
+                },
+                {
+                    "field": "name",
+                    "title": "이름",
+                    "width": 150,
+                    "editable": true
+                },
+                {
+                    "field": "email",
+                    "title": "이메일",
+                    "width": 200,
+                    "editable": true
+                },
+                {
+                    "field": "department",
+                    "title": "부서",
+                    "width": 150,
+                    "editable": true
+                },
+                {
+                    "field": "salary",
+                    "title": "급여",
+                    "type": "number",
+                    "width": 120,
+                    "format": "{0:c}",
+                    "editable": true
+                },
+                {
+                    "field": "hireDate",
+                    "title": "입사일",
+                    "type": "date",
+                    "width": 120,
+                    "format": "{0:yyyy-MM-dd}",
+                    "editable": true
+                }
+            ],
+            "options": {
+                "pageable": true,
+                "sortable": true,
+                "filterable": true,
+                "editable": true,
+                "editMode": "popup",
+                "height": "550px",
+                "resizable": true,
+                "reorderable": true
+            }
+        };
+
+        // Mock 데이터
+        const mockData = [
+            {"id": 1, "name": "김철수", "email": "kim@example.com", "department": "개발팀", "salary": 5500000, "hireDate": new Date("2020-01-15")},
+            {"id": 2, "name": "이영희", "email": "lee@example.com", "department": "디자인팀", "salary": 4800000, "hireDate": new Date("2020-03-20")},
+            {"id": 3, "name": "박민수", "email": "park@example.com", "department": "개발팀", "salary": 6000000, "hireDate": new Date("2019-05-10")},
+            {"id": 4, "name": "최지은", "email": "choi@example.com", "department": "마케팅팀", "salary": 5000000, "hireDate": new Date("2021-02-01")},
+            {"id": 5, "name": "정현우", "email": "jung@example.com", "department": "인사팀", "salary": 5200000, "hireDate": new Date("2020-07-15")},
+            {"id": 6, "name": "강민지", "email": "kang@example.com", "department": "개발팀", "salary": 5800000, "hireDate": new Date("2019-11-20")},
+            {"id": 7, "name": "윤서연", "email": "yoon@example.com", "department": "디자인팀", "salary": 4900000, "hireDate": new Date("2021-04-10")},
+            {"id": 8, "name": "임동현", "email": "lim@example.com", "department": "마케팅팀", "salary": 5100000, "hireDate": new Date("2020-09-05")},
+            {"id": 9, "name": "한지훈", "email": "han@example.com", "department": "개발팀", "salary": 6200000, "hireDate": new Date("2018-12-01")},
+            {"id": 10, "name": "조수진", "email": "jo@example.com", "department": "인사팀", "salary": 5300000, "hireDate": new Date("2021-06-15")},
+            {"id": 11, "name": "신예은", "email": "shin@example.com", "department": "디자인팀", "salary": 5000000, "hireDate": new Date("2020-10-20")},
+            {"id": 12, "name": "배준호", "email": "bae@example.com", "department": "개발팀", "salary": 5700000, "hireDate": new Date("2019-08-15")},
+            {"id": 13, "name": "홍서윤", "email": "hong@example.com", "department": "마케팅팀", "salary": 5200000, "hireDate": new Date("2021-01-10")},
+            {"id": 14, "name": "송민호", "email": "song@example.com", "department": "개발팀", "salary": 6100000, "hireDate": new Date("2019-03-25")},
+            {"id": 15, "name": "문채원", "email": "moon@example.com", "department": "인사팀", "salary": 5400000, "hireDate": new Date("2020-12-05")}
+        ];
+
+        let nextId = 16;
+
+        // JSON 설정 표시
+        document.getElementById('jsonConfig').textContent = JSON.stringify(gridConfig, null, 2);
+
+        // Grid 생성 함수
+        function createGridFromJson(config, data) {
+            const container = $('#' + config.id);
+
+            // 컬럼 설정
+            const columns = config.columns.map(function(col) {
+                return {
+                    field: col.field,
+                    title: col.title,
+                    width: col.width,
+                    format: col.format,
+                    editable: col.editable,
+                    editor: col.type === 'date' ? function(container, options) {
+                        $('<input name="' + options.field + '"/>')
+                            .appendTo(container)
+                            .kendoDatePicker({
+                                format: "yyyy-MM-dd"
+                            });
+                    } : col.field === 'department' ? function(container, options) {
+                        $('<input name="' + options.field + '"/>')
+                            .appendTo(container)
+                            .kendoDropDownList({
+                                dataSource: ["개발팀", "디자인팀", "마케팅팀", "인사팀"]
+                            });
+                    } : undefined
+                };
+            });
+
+            // 편집 도구 컬럼 추가
+            if (config.options.editable) {
+                columns.push({ command: ["edit", "destroy"], title: "작업", width: "200px" });
+            }
+
+            // DataSource 생성
+            const dataSource = new kendo.data.DataSource({
+                data: data,
+                pageSize: 10,
+                schema: {
+                    model: {
+                        id: "id",
+                        fields: {
+                            id: { type: "number", editable: false },
+                            name: { type: "string", validation: { required: true } },
+                            email: { type: "string", validation: { required: true, email: true } },
+                            department: { type: "string" },
+                            salary: { type: "number" },
+                            hireDate: { type: "date" }
+                        }
+                    }
+                }
+            });
+
+            // Grid 옵션
+            const gridOptions = {
+                dataSource: dataSource,
+                columns: columns,
+                pageable: config.options.pageable ? {
+                    refresh: true,
+                    pageSizes: [5, 10, 20, 50],
+                    buttonCount: 5
+                } : false,
+                sortable: config.options.sortable,
+                filterable: config.options.filterable,
+                resizable: config.options.resizable,
+                reorderable: config.options.reorderable,
+                height: config.options.height,
+                toolbar: config.options.editable ? ["create"] : null,
+                editable: config.options.editable ? config.options.editMode : false,
+                edit: function(e) {
+                    // 새로운 레코드인 경우 ID 자동 할당
+                    if (e.model.isNew()) {
+                        e.model.set("id", nextId++);
+                    }
+                }
+            };
+
+            // Grid 생성
+            container.kendoGrid(gridOptions);
+
+            return container.data('kendoGrid');
+        }
+
+        // 페이지 로드 시 Grid 생성
+        $(document).ready(function() {
+            createGridFromJson(gridConfig, mockData);
+        });
+
+        // JSON 설정 보기
+        function showConfig() {
+            kendo.alert('<pre style="max-height:400px;overflow:auto;">' +
+                JSON.stringify(gridConfig, null, 2) + '</pre>');
+        }
+
+        // 현재 데이터 보기
+        function showData() {
+            const grid = $('#employeeGrid').data('kendoGrid');
+            const data = grid.dataSource.data();
+            const simpleData = data.map(item => ({
+                id: item.id,
+                name: item.name,
+                email: item.email,
+                department: item.department,
+                salary: item.salary,
+                hireDate: kendo.toString(item.hireDate, 'yyyy-MM-dd')
+            }));
+            kendo.alert('<pre style="max-height:400px;overflow:auto;">' +
+                JSON.stringify(simpleData, null, 2) + '</pre>');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kendo UI Form - JSON 설정 예제 (Standalone)</title>
+
+    <!-- Kendo UI CSS -->
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2023.3.1114/styles/kendo.default-main.min.css" />
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #ff6358;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #555;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .code-box {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .k-form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 30px;
+            background-color: #fafafa;
+            border-radius: 8px;
+        }
+
+        .k-form-field {
+            margin-bottom: 20px;
+        }
+
+        .k-form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .k-required {
+            color: #ff6358;
+            margin-left: 4px;
+        }
+
+        .k-form-field-wrap input,
+        .k-form-field-wrap textarea,
+        .k-form-field-wrap select {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .k-form-buttons {
+            margin-top: 30px;
+            text-align: right;
+        }
+
+        .k-form-buttons button {
+            margin-left: 10px;
+        }
+
+        .k-button-solid-primary {
+            background-color: #ff6358;
+            border-color: #ff6358;
+        }
+
+        .k-button-solid-primary:hover {
+            background-color: #e55347;
+            border-color: #e55347;
+        }
+
+        .button-container {
+            margin: 20px 0;
+        }
+
+        .k-button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Kendo UI Form - JSON 설정 예제</h1>
+
+        <div class="info-box">
+            <strong>📌 이 예제는 서버 없이 로컬에서 바로 실행 가능합니다!</strong><br>
+            JSON 설정만으로 폼을 생성하고, 유효성 검사를 수행할 수 있습니다.
+        </div>
+
+        <div class="success-box" id="successMessage">
+            <strong>✅ 폼이 성공적으로 제출되었습니다!</strong><br>
+            제출된 데이터는 아래 콘솔에서 확인할 수 있습니다.
+        </div>
+
+        <h2>1. JSON 설정</h2>
+        <div class="button-container">
+            <button class="k-button k-button-solid-primary" onclick="showConfig()">JSON 설정 보기</button>
+            <button class="k-button k-button-solid-base" onclick="loadSampleData()">샘플 데이터 로드</button>
+        </div>
+
+        <h2>2. Form 렌더링 결과</h2>
+        <div id="userForm"></div>
+
+        <h2>3. 제출된 데이터</h2>
+        <div class="code-box">
+            <pre id="submittedData">폼을 제출하면 여기에 데이터가 표시됩니다.</pre>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <!-- Kendo UI JS -->
+    <script src="https://kendo.cdn.telerik.com/2023.3.1114/js/kendo.all.min.js"></script>
+
+    <!-- Kendo UI 한국어 -->
+    <script src="https://kendo.cdn.telerik.com/2023.3.1114/js/messages/kendo.messages.ko-KR.min.js"></script>
+
+    <script>
+        // Kendo UI 한국어 설정
+        kendo.culture("ko-KR");
+
+        // Form JSON 설정
+        const formConfig = {
+            "id": "userRegistration",
+            "title": "사용자 등록",
+            "fields": [
+                {
+                    "name": "username",
+                    "label": "사용자명",
+                    "type": "text",
+                    "required": true,
+                    "placeholder": "사용자명을 입력하세요",
+                    "validationRules": {
+                        "minLength": 3,
+                        "maxLength": 20,
+                        "message": "사용자명은 3-20자 사이여야 합니다"
+                    }
+                },
+                {
+                    "name": "email",
+                    "label": "이메일",
+                    "type": "text",
+                    "required": true,
+                    "placeholder": "email@example.com",
+                    "validationRules": {
+                        "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+                        "message": "올바른 이메일 주소를 입력하세요"
+                    }
+                },
+                {
+                    "name": "age",
+                    "label": "나이",
+                    "type": "number",
+                    "editor": {
+                        "widget": "numerictextbox",
+                        "step": 1,
+                        "decimals": 0,
+                        "min": 18,
+                        "max": 100
+                    },
+                    "validationRules": {
+                        "min": 18,
+                        "max": 100,
+                        "message": "나이는 18-100 사이여야 합니다"
+                    }
+                },
+                {
+                    "name": "gender",
+                    "label": "성별",
+                    "type": "dropdown",
+                    "editor": {
+                        "widget": "dropdownlist",
+                        "options": [
+                            {"text": "남성", "value": "male"},
+                            {"text": "여성", "value": "female"},
+                            {"text": "기타", "value": "other"}
+                        ]
+                    }
+                },
+                {
+                    "name": "birthDate",
+                    "label": "생년월일",
+                    "type": "date",
+                    "editor": {
+                        "widget": "datepicker",
+                        "format": "yyyy-MM-dd"
+                    }
+                },
+                {
+                    "name": "department",
+                    "label": "부서",
+                    "type": "dropdown",
+                    "editor": {
+                        "widget": "dropdownlist",
+                        "options": [
+                            {"text": "개발팀", "value": "개발팀"},
+                            {"text": "디자인팀", "value": "디자인팀"},
+                            {"text": "마케팅팀", "value": "마케팅팀"},
+                            {"text": "인사팀", "value": "인사팀"}
+                        ]
+                    }
+                },
+                {
+                    "name": "bio",
+                    "label": "자기소개",
+                    "type": "textarea",
+                    "placeholder": "자기소개를 입력하세요"
+                },
+                {
+                    "name": "agreeToTerms",
+                    "label": "이용약관에 동의합니다",
+                    "type": "checkbox",
+                    "required": true
+                }
+            ],
+            "options": {
+                "orientation": "vertical",
+                "buttons": ["submit", "clear"]
+            }
+        };
+
+        // Form 생성 함수
+        function createFormFromJson(config) {
+            const container = $('#' + config.id);
+
+            // 폼 HTML 생성
+            let formHtml = '<form id="' + config.id + '" class="k-form">';
+
+            if (config.title) {
+                formHtml += '<h3 style="margin-top:0;color:#333;">' + config.title + '</h3>';
+            }
+
+            config.fields.forEach(function(field) {
+                formHtml += '<div class="k-form-field">';
+                formHtml += '<label class="k-form-label" for="' + field.name + '">';
+                formHtml += field.label;
+                if (field.required) {
+                    formHtml += '<span class="k-required">*</span>';
+                }
+                formHtml += '</label>';
+
+                formHtml += '<div class="k-form-field-wrap">';
+
+                switch (field.type) {
+                    case 'textarea':
+                        formHtml += '<textarea id="' + field.name + '" name="' + field.name + '" ';
+                        formHtml += 'class="k-textarea" rows="4" ';
+                        if (field.placeholder) formHtml += 'placeholder="' + field.placeholder + '" ';
+                        if (field.required) formHtml += 'required ';
+                        formHtml += '></textarea>';
+                        break;
+
+                    case 'checkbox':
+                        formHtml += '<input type="checkbox" id="' + field.name + '" name="' + field.name + '" ';
+                        formHtml += 'class="k-checkbox" ';
+                        if (field.required) formHtml += 'required ';
+                        formHtml += '/>';
+                        break;
+
+                    default:
+                        formHtml += '<input id="' + field.name + '" name="' + field.name + '" ';
+                        if (field.placeholder) formHtml += 'placeholder="' + field.placeholder + '" ';
+                        if (field.required) formHtml += 'required ';
+                        formHtml += '/>';
+                        break;
+                }
+
+                formHtml += '</div>';
+                formHtml += '</div>';
+            });
+
+            // 버튼
+            formHtml += '<div class="k-form-buttons">';
+            formHtml += '<button type="submit" class="k-button k-button-solid-primary">제출</button>';
+            formHtml += '<button type="reset" class="k-button k-button-solid-base">초기화</button>';
+            formHtml += '</div>';
+
+            formHtml += '</form>';
+
+            container.html(formHtml);
+
+            // 위젯 초기화
+            config.fields.forEach(function(field) {
+                const input = $('#' + field.name);
+
+                if (field.editor) {
+                    const editor = field.editor;
+
+                    switch (editor.widget) {
+                        case 'dropdownlist':
+                            input.kendoDropDownList({
+                                dataSource: editor.options || [],
+                                dataTextField: 'text',
+                                dataValueField: 'value',
+                                optionLabel: '선택하세요'
+                            });
+                            break;
+
+                        case 'numerictextbox':
+                            input.kendoNumericTextBox({
+                                step: editor.step,
+                                decimals: editor.decimals,
+                                min: editor.min,
+                                max: editor.max
+                            });
+                            break;
+
+                        case 'datepicker':
+                            input.kendoDatePicker({
+                                format: editor.format || 'yyyy-MM-dd'
+                            });
+                            break;
+                    }
+                }
+
+                // 유효성 검사 규칙 추가
+                if (field.validationRules) {
+                    if (field.validationRules.pattern) {
+                        input.attr('pattern', field.validationRules.pattern);
+                    }
+                    if (field.validationRules.minLength) {
+                        input.attr('minlength', field.validationRules.minLength);
+                    }
+                    if (field.validationRules.maxLength) {
+                        input.attr('maxlength', field.validationRules.maxLength);
+                    }
+                }
+            });
+
+            // Kendo Validator 초기화
+            const validator = container.find('form').kendoValidator({
+                validateOnBlur: true
+            }).data('kendoValidator');
+
+            // 폼 제출 처리
+            container.find('form').on('submit', function(e) {
+                e.preventDefault();
+
+                if (validator.validate()) {
+                    const formData = {};
+
+                    config.fields.forEach(function(field) {
+                        const input = $('#' + field.name);
+                        const widget = input.data('kendoNumericTextBox') ||
+                                     input.data('kendoDatePicker') ||
+                                     input.data('kendoDropDownList');
+
+                        if (widget) {
+                            const value = widget.value();
+                            formData[field.name] = value instanceof Date ?
+                                kendo.toString(value, 'yyyy-MM-dd') : value;
+                        } else if (field.type === 'checkbox') {
+                            formData[field.name] = input.is(':checked');
+                        } else {
+                            formData[field.name] = input.val();
+                        }
+                    });
+
+                    // 제출된 데이터 표시
+                    $('#submittedData').text(JSON.stringify(formData, null, 2));
+                    $('#successMessage').slideDown();
+
+                    // 콘솔에도 출력
+                    console.log('제출된 데이터:', formData);
+
+                    setTimeout(function() {
+                        $('#successMessage').slideUp();
+                    }, 5000);
+                }
+            });
+
+            return validator;
+        }
+
+        // 페이지 로드 시 Form 생성
+        $(document).ready(function() {
+            createFormFromJson(formConfig);
+        });
+
+        // JSON 설정 보기
+        function showConfig() {
+            kendo.alert('<pre style="max-height:400px;overflow:auto;">' +
+                JSON.stringify(formConfig, null, 2) + '</pre>');
+        }
+
+        // 샘플 데이터 로드
+        function loadSampleData() {
+            $('#username').val('홍길동');
+            $('#email').val('hong@example.com');
+            $('#age').data('kendoNumericTextBox').value(30);
+            $('#gender').data('kendoDropDownList').value('male');
+            $('#birthDate').data('kendoDatePicker').value(new Date('1994-05-15'));
+            $('#department').data('kendoDropDownList').value('개발팀');
+            $('#bio').val('안녕하세요! 개발자 홍길동입니다.');
+            $('#agreeToTerms').prop('checked', true);
+
+            kendo.alert('샘플 데이터가 로드되었습니다!');
+        }
+    </script>
+</body>
+</html>

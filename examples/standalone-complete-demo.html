@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kendo UI JSON 통합 시스템 - 완전한 데모 (Standalone)</title>
+
+    <!-- Kendo UI CSS -->
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2023.3.1114/styles/kendo.default-main.min.css" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #333;
+            font-size: 28px;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            color: #666;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .tabs {
+            background-color: white;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tab-buttons {
+            display: flex;
+            background-color: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .tab-button.active {
+            background-color: white;
+            color: #667eea;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            background-color: white;
+            border-radius: 0 0 8px 8px;
+            min-height: 600px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .info-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .info-banner h2 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        .info-banner p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .chart-item {
+            background-color: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .chart-item h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+
+        .k-grid {
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .k-grid-header .k-header {
+            background-color: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .feature-card h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .feature-card p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background-color: #667eea;
+            color: white;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>🚀 Kendo UI JSON 통합 시스템</h1>
+            <p>JSON 설정만으로 Grid, Chart, Form을 동적으로 생성하는 완전한 데모</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="openTab(event, 'overview')">
+                    📖 개요
+                </button>
+                <button class="tab-button" onclick="openTab(event, 'grid')">
+                    📊 Grid 데모
+                </button>
+                <button class="tab-button" onclick="openTab(event, 'chart')">
+                    📈 Chart 데모
+                </button>
+                <button class="tab-button" onclick="openTab(event, 'form')">
+                    📝 Form 데모
+                </button>
+                <button class="tab-button" onclick="openTab(event, 'dashboard')">
+                    🎨 통합 대시보드
+                </button>
+            </div>
+
+            <!-- 개요 탭 -->
+            <div id="overview" class="tab-content active">
+                <div class="info-banner">
+                    <h2>✨ 서버 없이 바로 실행 가능한 완전한 예제!</h2>
+                    <p>이 페이지는 로컬 환경에서 바로 실행할 수 있습니다. JSON 설정을 통해 Kendo UI 컴포넌트를 생성하는 방법을 확인하세요.</p>
+                </div>
+
+                <h2 style="color: #333; margin-bottom: 20px;">주요 기능</h2>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h4>📊 JSON 기반 Grid</h4>
+                        <p>컬럼, 데이터소스, 편집 옵션을 JSON으로 정의하여 동적 Grid 생성. CRUD 작업 완벽 지원.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>📈 JSON 기반 Chart</h4>
+                        <p>다양한 차트 타입(Column, Line, Pie, Bar)을 JSON 설정만으로 생성. 동적 데이터 바인딩.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>📝 JSON 기반 Form</h4>
+                        <p>필드 정의와 유효성 검사 규칙을 JSON으로 설정. 다양한 입력 위젯 지원.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🔄 실시간 CRUD</h4>
+                        <p>Grid에서 데이터 생성, 수정, 삭제를 즉시 수행. 로컬 데이터로 완전한 작동.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>✅ 자동 유효성 검사</h4>
+                        <p>Form 필드의 유효성 검사를 JSON 규칙으로 정의. 자동 에러 메시지 표시.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🎨 완전한 커스터마이징</h4>
+                        <p>모든 UI 요소를 JSON 설정으로 제어. 코드 변경 없이 설정만으로 조정.</p>
+                    </div>
+                </div>
+
+                <h2 style="color: #333; margin-top: 40px; margin-bottom: 20px;">사용 방법</h2>
+
+                <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; line-height: 1.8;">
+                    <p><strong>1단계:</strong> 상단 탭을 클릭하여 각 컴포넌트 예제를 확인하세요.</p>
+                    <p><strong>2단계:</strong> Grid 탭에서 데이터 추가/수정/삭제를 시도해보세요.</p>
+                    <p><strong>3단계:</strong> Form 탭에서 유효성 검사를 테스트해보세요.</p>
+                    <p><strong>4단계:</strong> 통합 대시보드에서 모든 기능을 한눈에 확인하세요.</p>
+                </div>
+            </div>
+
+            <!-- Grid 탭 -->
+            <div id="grid" class="tab-content">
+                <div class="info-banner">
+                    <h2>📊 Grid 데모</h2>
+                    <p>JSON 설정으로 생성된 직원 관리 Grid입니다. 추가, 수정, 삭제를 자유롭게 시도해보세요!</p>
+                </div>
+                <div id="employeeGrid"></div>
+            </div>
+
+            <!-- Chart 탭 -->
+            <div id="chart" class="tab-content">
+                <div class="info-banner">
+                    <h2>📈 Chart 데모</h2>
+                    <p>다양한 차트 타입을 JSON 설정으로 생성한 예제입니다.</p>
+                </div>
+                <div class="chart-grid">
+                    <div class="chart-item">
+                        <h3>월별 매출 현황 (Column Chart)</h3>
+                        <div id="salesChart"></div>
+                    </div>
+                    <div class="chart-item">
+                        <h3>부서별 인원 (Pie Chart)</h3>
+                        <div id="deptChart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form 탭 -->
+            <div id="form" class="tab-content">
+                <div class="info-banner">
+                    <h2>📝 Form 데모</h2>
+                    <p>JSON 설정으로 생성된 사용자 등록 폼입니다. 유효성 검사를 확인해보세요!</p>
+                </div>
+                <div id="userForm"></div>
+            </div>
+
+            <!-- 통합 대시보드 탭 -->
+            <div id="dashboard" class="tab-content">
+                <div class="info-banner">
+                    <h2>🎨 통합 대시보드</h2>
+                    <p>Grid, Chart를 한 페이지에 통합한 대시보드 예제입니다.</p>
+                </div>
+                <div class="chart-grid" style="margin-bottom: 30px;">
+                    <div class="chart-item">
+                        <h3>월별 매출</h3>
+                        <div id="dashSalesChart"></div>
+                    </div>
+                    <div class="chart-item">
+                        <h3>부서별 인원</h3>
+                        <div id="dashDeptChart"></div>
+                    </div>
+                </div>
+                <div id="dashGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <!-- Kendo UI JS -->
+    <script src="https://kendo.cdn.telerik.com/2023.3.1114/js/kendo.all.min.js"></script>
+
+    <!-- Kendo UI 한국어 -->
+    <script src="https://kendo.cdn.telerik.com/2023.3.1114/js/messages/kendo.messages.ko-KR.min.js"></script>
+
+    <script src="kendo-json-ui-standalone.js"></script>
+    <script>
+        // Kendo UI 한국어 설정
+        kendo.culture("ko-KR");
+
+        // 탭 전환 함수
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+
+            const tabButtons = document.getElementsByClassName("tab-button");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // 페이지 로드 시 모든 컴포넌트 생성
+        $(document).ready(function() {
+            // Grid
+            KendoJsonUI.createGrid('employeeGrid', KendoJsonUI.configs.gridConfig, KendoJsonUI.data.employeeData);
+            KendoJsonUI.createGrid('dashGrid', KendoJsonUI.configs.gridConfig, KendoJsonUI.data.employeeData);
+
+            // Charts
+            KendoJsonUI.createChart('salesChart', KendoJsonUI.configs.salesChartConfig, KendoJsonUI.data.salesData);
+            KendoJsonUI.createChart('deptChart', KendoJsonUI.configs.deptChartConfig, KendoJsonUI.data.deptData);
+            KendoJsonUI.createChart('dashSalesChart', KendoJsonUI.configs.salesChartConfig, KendoJsonUI.data.salesData);
+            KendoJsonUI.createChart('dashDeptChart', KendoJsonUI.configs.deptChartConfig, KendoJsonUI.data.deptData);
+
+            // Form
+            KendoJsonUI.createForm('userForm', KendoJsonUI.configs.formConfig);
+        });
+    </script>
+</body>
+</html>

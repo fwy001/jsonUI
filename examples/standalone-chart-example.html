@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kendo UI Chart - JSON 설정 예제 (Standalone)</title>
+
+    <!-- Kendo UI CSS -->
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2023.3.1114/styles/kendo.default-main.min.css" />
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #ff6358;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #555;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .code-box {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .chart-item {
+            background-color: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .button-container {
+            margin: 20px 0;
+        }
+
+        .k-button {
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Kendo UI Chart - JSON 설정 예제</h1>
+
+        <div class="info-box">
+            <strong>📌 이 예제는 서버 없이 로컬에서 바로 실행 가능합니다!</strong><br>
+            JSON 설정만으로 다양한 종류의 차트를 생성할 수 있습니다.
+        </div>
+
+        <h2>1. JSON 설정</h2>
+        <div class="button-container">
+            <button class="k-button k-button-solid-primary" onclick="showConfig('column')">Column Chart 설정</button>
+            <button class="k-button k-button-solid-primary" onclick="showConfig('pie')">Pie Chart 설정</button>
+            <button class="k-button k-button-solid-primary" onclick="showConfig('line')">Line Chart 설정</button>
+        </div>
+
+        <h2>2. Chart 렌더링 결과</h2>
+        <div class="chart-grid">
+            <div class="chart-item">
+                <h3>월별 매출 현황 (Column Chart)</h3>
+                <div id="salesChart"></div>
+            </div>
+
+            <div class="chart-item">
+                <h3>부서별 인원 (Pie Chart)</h3>
+                <div id="deptChart"></div>
+            </div>
+
+            <div class="chart-item">
+                <h3>분기별 성장률 (Line Chart)</h3>
+                <div id="growthChart"></div>
+            </div>
+
+            <div class="chart-item">
+                <h3>제품별 판매량 (Bar Chart)</h3>
+                <div id="productChart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <!-- Kendo UI JS -->
+    <script src="https://kendo.cdn.telerik.com/2023.3.1114/js/kendo.all.min.js"></script>
+
+    <!-- Kendo UI 한국어 -->
+    <script src="https://kendo.cdn.telerik.com/2023.3.1114/js/messages/kendo.messages.ko-KR.min.js"></script>
+
+    <script>
+        // Kendo UI 한국어 설정
+        kendo.culture("ko-KR");
+
+        // Column Chart JSON 설정
+        const columnChartConfig = {
+            "id": "salesChart",
+            "title": "월별 매출 현황",
+            "chartType": "column",
+            "series": [{
+                "type": "column",
+                "field": "sales",
+                "name": "매출",
+                "color": "#4CAF50"
+            }],
+            "categoryAxis": {
+                "field": "month"
+            },
+            "valueAxis": {
+                "title": "매출액 (원)",
+                "format": "{0:c}"
+            }
+        };
+
+        // Pie Chart JSON 설정
+        const pieChartConfig = {
+            "id": "deptChart",
+            "title": "부서별 인원",
+            "chartType": "pie",
+            "series": [{
+                "type": "pie",
+                "field": "count",
+                "categoryField": "department"
+            }],
+            "legend": {
+                "position": "right"
+            }
+        };
+
+        // Line Chart JSON 설정
+        const lineChartConfig = {
+            "id": "growthChart",
+            "title": "분기별 성장률",
+            "chartType": "line",
+            "series": [{
+                "type": "line",
+                "field": "rate",
+                "name": "성장률 (%)",
+                "color": "#2196F3"
+            }],
+            "categoryAxis": {
+                "field": "quarter"
+            },
+            "valueAxis": {
+                "title": "성장률 (%)"
+            }
+        };
+
+        // Bar Chart JSON 설정
+        const barChartConfig = {
+            "id": "productChart",
+            "title": "제품별 판매량",
+            "chartType": "bar",
+            "series": [{
+                "type": "bar",
+                "field": "sales",
+                "name": "판매량",
+                "color": "#FF9800"
+            }],
+            "categoryAxis": {
+                "field": "product"
+            }
+        };
+
+        // Mock 데이터
+        const salesData = [
+            {"month": "1월", "sales": 45000000},
+            {"month": "2월", "sales": 52000000},
+            {"month": "3월", "sales": 48000000},
+            {"month": "4월", "sales": 61000000},
+            {"month": "5월", "sales": 58000000},
+            {"month": "6월", "sales": 67000000},
+            {"month": "7월", "sales": 72000000},
+            {"month": "8월", "sales": 68000000},
+            {"month": "9월", "sales": 75000000},
+            {"month": "10월", "sales": 81000000},
+            {"month": "11월", "sales": 78000000},
+            {"month": "12월", "sales": 95000000}
+        ];
+
+        const deptData = [
+            {"department": "개발팀", "count": 6},
+            {"department": "디자인팀", "count": 3},
+            {"department": "마케팅팀", "count": 3},
+            {"department": "인사팀", "count": 3}
+        ];
+
+        const growthData = [
+            {"quarter": "Q1", "rate": 5.2},
+            {"quarter": "Q2", "rate": 7.8},
+            {"quarter": "Q3", "rate": 12.5},
+            {"quarter": "Q4", "rate": 15.3}
+        ];
+
+        const productData = [
+            {"product": "제품 A", "sales": 450},
+            {"product": "제품 B", "sales": 380},
+            {"product": "제품 C", "sales": 520},
+            {"product": "제품 D", "sales": 290},
+            {"product": "제품 E", "sales": 410}
+        ];
+
+        // Chart 생성 함수
+        function createChartFromJson(config, data) {
+            const container = $('#' + config.id);
+
+            const chartOptions = {
+                title: {
+                    text: config.title
+                },
+                dataSource: data,
+                series: config.series.map(s => ({
+                    type: s.type,
+                    field: s.field,
+                    categoryField: s.categoryField,
+                    name: s.name,
+                    color: s.color,
+                    labels: {
+                        visible: config.chartType === 'pie',
+                        template: config.chartType === 'pie' ?
+                            "#= category # - #= value #명" : undefined
+                    }
+                })),
+                legend: {
+                    visible: true,
+                    position: config.legend ? config.legend.position : 'bottom'
+                },
+                tooltip: {
+                    visible: true,
+                    template: config.chartType === 'pie' ?
+                        "#= category #: #= value #명" :
+                        "#= series.name #: #= value #"
+                }
+            };
+
+            // Category Axis (Pie 차트는 제외)
+            if (config.categoryAxis && config.chartType !== 'pie') {
+                chartOptions.categoryAxis = {
+                    field: config.categoryAxis.field,
+                    title: {
+                        text: config.categoryAxis.title
+                    }
+                };
+            }
+
+            // Value Axis
+            if (config.valueAxis) {
+                chartOptions.valueAxis = {
+                    title: {
+                        text: config.valueAxis.title
+                    },
+                    labels: {
+                        format: config.valueAxis.format
+                    }
+                };
+            }
+
+            container.kendoChart(chartOptions);
+        }
+
+        // 페이지 로드 시 모든 차트 생성
+        $(document).ready(function() {
+            createChartFromJson(columnChartConfig, salesData);
+            createChartFromJson(pieChartConfig, deptData);
+            createChartFromJson(lineChartConfig, growthData);
+            createChartFromJson(barChartConfig, productData);
+        });
+
+        // JSON 설정 보기
+        function showConfig(type) {
+            let config;
+            switch(type) {
+                case 'column':
+                    config = columnChartConfig;
+                    break;
+                case 'pie':
+                    config = pieChartConfig;
+                    break;
+                case 'line':
+                    config = lineChartConfig;
+                    break;
+            }
+            kendo.alert('<pre style="max-height:400px;overflow:auto;">' +
+                JSON.stringify(config, null, 2) + '</pre>');
+        }
+    </script>
+</body>
+</html>

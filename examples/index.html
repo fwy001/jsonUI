@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kendo UI JSON 통합 시스템 - 예제 모음</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .example-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .example-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .example-card h3 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .example-card p {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .example-card .features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .example-card .features li {
+            color: #555;
+            font-size: 14px;
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .example-card .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .recommended {
+            position: relative;
+            border: 3px solid #FFD700;
+        }
+
+        .recommended:before {
+            content: "⭐ 추천";
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background-color: #FFD700;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .info-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .info-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .info-section ul {
+            color: #666;
+            line-height: 2;
+            padding-left: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Kendo UI JSON 통합 시스템</h1>
+            <p>서버 없이 바로 실행 가능한 예제 모음</p>
+            <span class="badge">Standalone Examples</span>
+        </div>
+
+        <div class="examples-grid">
+            <div class="example-card recommended" onclick="window.location.href='standalone-complete-demo.html'">
+                <div class="example-icon">🎨</div>
+                <h3>완전한 통합 데모</h3>
+                <p>Grid, Chart, Form을 모두 포함한 완전한 예제입니다.</p>
+                <ul class="features">
+                    <li>탭 인터페이스</li>
+                    <li>모든 컴포넌트 포함</li>
+                    <li>통합 대시보드</li>
+                    <li>시스템 개요 제공</li>
+                </ul>
+                <a href="standalone-complete-demo.html" class="btn">실행하기</a>
+            </div>
+
+            <div class="example-card" onclick="window.location.href='standalone-grid-example.html'">
+                <div class="example-icon">📊</div>
+                <h3>Grid 예제</h3>
+                <p>JSON 설정으로 생성되는 직원 관리 Grid입니다.</p>
+                <ul class="features">
+                    <li>CRUD 작업 가능</li>
+                    <li>페이징, 정렬, 필터링</li>
+                    <li>15명 샘플 데이터</li>
+                    <li>JSON 설정 보기</li>
+                </ul>
+                <a href="standalone-grid-example.html" class="btn">실행하기</a>
+            </div>
+
+            <div class="example-card" onclick="window.location.href='standalone-chart-example.html'">
+                <div class="example-icon">📈</div>
+                <h3>Chart 예제</h3>
+                <p>다양한 종류의 차트를 JSON으로 생성하는 예제입니다.</p>
+                <ul class="features">
+                    <li>4가지 차트 타입</li>
+                    <li>Column, Pie, Line, Bar</li>
+                    <li>실시간 데이터 표시</li>
+                    <li>JSON 설정 확인</li>
+                </ul>
+                <a href="standalone-chart-example.html" class="btn">실행하기</a>
+            </div>
+
+            <div class="example-card" onclick="window.location.href='standalone-form-example.html'">
+                <div class="example-icon">📝</div>
+                <h3>Form 예제</h3>
+                <p>JSON 설정으로 생성되는 동적 폼입니다.</p>
+                <ul class="features">
+                    <li>자동 유효성 검사</li>
+                    <li>다양한 입력 위젯</li>
+                    <li>샘플 데이터 로드</li>
+                    <li>제출 데이터 확인</li>
+                </ul>
+                <a href="standalone-form-example.html" class="btn">실행하기</a>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>🎯 시작하기</h2>
+            <p style="color: #666; line-height: 1.8; margin-bottom: 15px;">
+                위 카드를 클릭하거나 "실행하기" 버튼을 눌러 예제를 실행하세요.
+                서버 설치나 빌드 과정 없이 바로 확인할 수 있습니다!
+            </p>
+            <ul>
+                <li><strong>추천:</strong> "완전한 통합 데모"부터 시작하세요</li>
+                <li><strong>인터넷 연결 필요:</strong> Kendo UI를 CDN에서 로드합니다</li>
+                <li><strong>최신 브라우저 사용:</strong> Chrome, Firefox, Edge, Safari 권장</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h2>📚 주요 기능</h2>
+            <ul>
+                <li><strong>Grid:</strong> JSON 설정으로 Grid 생성, CRUD 작업, 페이징/정렬/필터링</li>
+                <li><strong>Chart:</strong> 다양한 차트 타입을 JSON으로 정의, 동적 데이터 바인딩</li>
+                <li><strong>Form:</strong> 필드와 유효성 검사를 JSON으로 설정, 자동 검증</li>
+                <li><strong>통합 시스템:</strong> 모든 컴포넌트를 하나의 대시보드에서 관리</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h2>💡 팁</h2>
+            <ul>
+                <li>각 예제에서 "JSON 설정 보기" 버튼을 클릭하여 설정 구조를 확인하세요</li>
+                <li>Grid에서 데이터를 추가/수정/삭제하며 CRUD 작업을 체험하세요</li>
+                <li>Form에서 잘못된 데이터를 입력하여 유효성 검사를 테스트하세요</li>
+                <li>브라우저 개발자 도구(F12)로 코드를 확인할 수 있습니다</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>Kendo UI JSON 통합 시스템 - Standalone Examples</p>
+            <p style="margin-top: 10px; opacity: 0.8;">
+                더 자세한 정보는 <a href="README.md" style="color: white; text-decoration: underline;">README.md</a>를 참조하세요
+            </p>
+        </div>
+    </div>
+</body>
+</html>
